@@ -9,6 +9,8 @@
 /[Bb]uilds/
 /[Ll]ogs/
 /[Mm]emoryCaptures/
+/[Rr]ecordings/
+/UserSettings/
 
 # Asset meta data should only be ignored when the corresponding asset is also ignored
 !/[Aa]ssets/**/*.meta
@@ -48,13 +50,29 @@ ExportedObj/
 *.pdb.meta
 *.mdb.meta
 
+
 # Unity3D generated file on crash reports
 sysinfo.txt
+mono_crash.*.json
 
 # Builds
 *.apk
 *.unitypackage
+*.unitypackage.meta
 
 # Crashlytics generated file
 crashlytics-build.properties
 
+.idea
+Assets/TextMesh Pro/Documentation
+UMotionData/AutoBackups
+UMotionData/Temp
+default-2021.dwlt
+Search.settings
+UserSettings/Layouts
+RiderScriptEditorPersistedState.asset
+EditorStates.asset
+Assets/Standard Assets/ExplosiveLLC
+ExplosiveLLC.meta
+EditorStates.asset.meta
+Keys
