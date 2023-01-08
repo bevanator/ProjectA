@@ -97,13 +97,13 @@ namespace ProjectA
             }
             _velocity.y += m_Gravity * Time.deltaTime;
             _characterController.Move(Time.deltaTime * _velocity);
-            if (!_characterController.isGrounded && !_isFloating)
+            if (!_isGrounded && !_isFloating)
             {
                 _isFloating = true;
                 print(_isFloating);
                 _animator.SetTrigger(Jump1);
             }
-            if (_characterController.isGrounded && _isFloating)
+            if (_isGrounded && _isFloating)
             {
                 _isFloating = false;
                 print(_isFloating);

@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 327137631}
   - component: {fileID: 327137630}
   - component: {fileID: 327137629}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -454,7 +454,7 @@ GameObject:
   - component: {fileID: 1467153485}
   - component: {fileID: 1467153484}
   - component: {fileID: 1467153483}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -697,6 +697,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2112094765972598776, guid: 5eb303bc2e4d4b448873df7596eadc0d, type: 3}
+      propertyPath: m_GroundCheckDistance
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 4675957454395125562, guid: 5eb303bc2e4d4b448873df7596eadc0d, type: 3}
       propertyPath: m_Name
       value: Player
@@ -904,11 +908,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3292841697137690383, guid: 9cb70e0b9a39c9e418f9630e4deff780, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.14118044
+      value: 0.14118046
       objectReference: {fileID: 0}
     - target: {fileID: 3292841697137690383, guid: 9cb70e0b9a39c9e418f9630e4deff780, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.4556309
+      value: -0.45563093
       objectReference: {fileID: 0}
     - target: {fileID: 3292841697137690383, guid: 9cb70e0b9a39c9e418f9630e4deff780, type: 3}
       propertyPath: m_LocalRotation.z
