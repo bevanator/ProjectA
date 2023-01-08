@@ -25,7 +25,10 @@ namespace ProjectA
         [SerializeField] private bool m_CanDoubleJump;
         [ShowInInspector, ReadOnly]
         private bool _isRunning;
+        private bool _isFloating;
         private static readonly int Running = Animator.StringToHash("Running");
+        private static readonly int Jump1 = Animator.StringToHash("Jump");
+        private static readonly int Land = Animator.StringToHash("Land");
 
 
         protected void Awake()
@@ -94,6 +97,22 @@ namespace ProjectA
             }
             _velocity.y += m_Gravity * Time.deltaTime;
             _characterController.Move(Time.deltaTime * _velocity);
+            if (!_characterController.isGrounded && !_isFloating)
+            {
+                _isFloating = true;
+                print(_isFloating);
+                _animator.SetTrigger(Jump1);
+            }
+            if (_characterController.isGrounded && _isFloating)
+            {
+                _isFloating = false;
+                print(_isFloating);
+                _animator.SetTrigger(Land);
+            }
+        }
+        private void JumpAnimationHandler()
+        {
+            
         }
         private void Jump()
         {
