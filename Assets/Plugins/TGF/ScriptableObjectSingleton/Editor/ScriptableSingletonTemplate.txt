@@ -1,0 +1,13 @@
+using ThunderGames.ScriptableObjectSingletons;
+using UnityEngine;
+
+namespace #Namespace#
+{
+	public class #SingletonClass# : ScriptableSingletonBase<#SingletonClass#>
+	{
+#if UNITY_EDITOR
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+		private static void OnStartup() => InitializeSingleton();
+#endif
+	}
+}
