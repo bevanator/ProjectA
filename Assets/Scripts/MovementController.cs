@@ -24,11 +24,14 @@ namespace ProjectA
         [SerializeField] private float m_JumpHeight;
         [SerializeField] private bool m_CanDoubleJump;
         [ShowInInspector, ReadOnly]
-        private bool _isRunning;
-        private bool _isFloating;
+        private bool _isMoving;
+        [ShowInInspector, ReadOnly]
+        private bool _isRunningOnGround;
+        [ShowInInspector, ReadOnly] private bool _isFloating;
         private static readonly int Running = Animator.StringToHash("Running");
         private static readonly int Jump1 = Animator.StringToHash("Jump");
         private static readonly int Land = Animator.StringToHash("Land");
+        private static readonly int Floating = Animator.StringToHash("Float");
 
 
         protected void Awake()
@@ -52,14 +55,14 @@ namespace ProjectA
                     m_CanDoubleJump = true;
                 }
             }
-            else
-            {
-                if (Input.GetKeyDown(KeyCode.Space) && m_CanDoubleJump)
-                {
-                    Jump();
-                    m_CanDoubleJump = false;
-                }
-            }
+            // else
+            // {
+            //     if (Input.GetKeyDown(KeyCode.Space) && m_CanDoubleJump)
+            //     {
+            //         Jump();
+            //         m_CanDoubleJump = false;
+            //     }
+            // }
 
         }
         private void ProcessInputDirection()
@@ -70,18 +73,25 @@ namespace ProjectA
         }
         private void Move()
         {
-            if (_playerInputController.Direction.magnitude > 0.1f && !_isRunning)
+            if (_playerInputController.Direction.magnitude > 0.1f)
             {
-                _isRunning = true;
-                _animator.SetBool(Running, true);
+                if (!_isMoving)
+                {
+                    _isMoving = true;
+                    print("here");
+                    if(_characterController.isGrounded) _animator.SetBool(Running, true);
+                }
             }
-            if (!(_playerInputController.Direction.magnitude > 0.1f) && _isRunning)
+            if (!(_playerInputController.Direction.magnitude > 0.1f))
             {
-                _isRunning = false;
-                _animator.SetBool(Running, false);
+                if (_isMoving)
+                {
+                    _isMoving = false;
+                    _animator.SetBool(Running, false);
+                }
                 return;
             }
-            if (_isRunning)
+            if (_isMoving)
             {
                 _speed = m_MaxMovementSpeed * Time.deltaTime;
                 transform.rotation = Quaternion.Euler(0f, _relativeAngle, 0f);
@@ -97,25 +107,24 @@ namespace ProjectA
             }
             _velocity.y += m_Gravity * Time.deltaTime;
             _characterController.Move(Time.deltaTime * _velocity);
-            if (!_isGrounded && !_isFloating)
+            if (!_characterController.isGrounded && !_isFloating)
             {
                 _isFloating = true;
-                print(_isFloating);
-                _animator.SetTrigger(Jump1);
+                _animator.SetBool(Running, false);
+                _animator.SetTrigger(Floating);
             }
-            if (_isGrounded && _isFloating)
+            if (_characterController.isGrounded && _isFloating)
             {
                 _isFloating = false;
-                print(_isFloating);
+                if(_isMoving) _animator.SetBool(Running, true);
                 _animator.SetTrigger(Land);
             }
         }
-        private void JumpAnimationHandler()
-        {
-            
-        }
         private void Jump()
         {
+            _animator.SetBool(Running, false);
+            _animator.SetTrigger(Jump1);
+            _isFloating = true;
             _velocity.y = Mathf.Sqrt(m_JumpHeight * -2f * m_Gravity);
         }
 
