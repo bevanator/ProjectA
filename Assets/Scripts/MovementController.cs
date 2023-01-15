@@ -32,6 +32,7 @@ namespace ProjectA
         private static readonly int Jump1 = Animator.StringToHash("Jump");
         private static readonly int Land = Animator.StringToHash("Land");
         private static readonly int Floating = Animator.StringToHash("Float");
+        private static readonly int Slash1 = Animator.StringToHash("Slash1");
 
 
         protected void Awake()
@@ -54,6 +55,10 @@ namespace ProjectA
                     Jump();
                     m_CanDoubleJump = true;
                 }
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Slash();
+                }
             }
             // else
             // {
@@ -64,6 +69,10 @@ namespace ProjectA
             //     }
             // }
 
+        }
+        private void Slash()
+        {
+            _animator.SetTrigger(Slash1);
         }
         private void ProcessInputDirection()
         {
