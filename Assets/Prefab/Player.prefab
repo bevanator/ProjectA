@@ -2656,9 +2656,9 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: b303b524ce2d1d04d9cfd8d51eaaf658, type: 3}
   m_Controller: {fileID: 9100000, guid: adb69ff1e829d4a4ea11e7b14c76f7cb, type: 2}
-  m_CullingMode: 1
+  m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -2742,12 +2742,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8050a0211e52409e985e9241c6f311a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_MaxMovementSpeed: 5
+  m_MaxMovementSpeed: 8
   m_GroundCheckDistance: 0.2
   m_GroundMasks:
     serializedVersion: 2
     m_Bits: 64
-  m_Gravity: -25
+  m_Gravity: -35
   m_JumpHeight: 3
   m_CanDoubleJump: 0
 --- !u!1 &4974434176327426054

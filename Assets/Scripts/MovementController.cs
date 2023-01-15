@@ -78,7 +78,6 @@ namespace ProjectA
                 if (!_isMoving)
                 {
                     _isMoving = true;
-                    print("here");
                     if(_characterController.isGrounded) _animator.SetBool(Running, true);
                 }
             }
