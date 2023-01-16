@@ -9,6 +9,7 @@ namespace ProjectA
         {
             Vector2 keyboardMovement = new(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
             Direction = keyboardMovement;
+            
         }
     }
 }

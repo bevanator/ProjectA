@@ -1,4 +1,5 @@
-﻿using Sirenix.OdinInspector;
+﻿using System;
+using Sirenix.OdinInspector;
 using UnityEngine;
 namespace ProjectA
 {
@@ -34,8 +35,10 @@ namespace ProjectA
         private static readonly int Land = Animator.StringToHash("Land");
         private static readonly int Floating = Animator.StringToHash("Float");
         private static readonly int Slash1 = Animator.StringToHash("Slash1");
+        private static readonly int RunningSword = Animator.StringToHash("RunningSword");
 
-        
+        [SerializeField] private SwordController m_SwordController;
+
 
         protected void Awake()
         {
@@ -86,6 +89,8 @@ namespace ProjectA
         
         private void Slash()
         {
+            if(!m_SwordController.SwordOut) _animator.SetBool(Running, false);
+            else _animator.SetBool(RunningSword, false);
             _animator.SetTrigger(Slash1);
         }
         private void ProcessInputDirection()
@@ -102,7 +107,11 @@ namespace ProjectA
                 if (!_isMoving)
                 {
                     _isMoving = true;
-                    if(_characterController.isGrounded) _animator.SetBool(Running, true);
+                    if (_characterController.isGrounded)
+                    {
+                        if(!m_SwordController.SwordOut) _animator.SetBool(Running, true);
+                        else _animator.SetBool(RunningSword, true);
+                    }
                 }
             }
             if (!(_playerInputController.Direction.magnitude > 0.1f))
@@ -110,7 +119,9 @@ namespace ProjectA
                 if (_isMoving)
                 {
                     _isMoving = false;
-                    _animator.SetBool(Running, false);
+                    if(!m_SwordController.SwordOut) _animator.SetBool(Running, false);
+                    else _animator.SetBool(RunningSword, false);
+
                 }
                 return;
             }
@@ -136,20 +147,27 @@ namespace ProjectA
             if (!_characterController.isGrounded && !_isFloating)
             {
                 _isFloating = true;
-                _animator.SetBool(Running, false);
+                if(!m_SwordController.SwordOut) _animator.SetBool(Running, false);
+                else _animator.SetBool(RunningSword, false);
                 _animator.SetTrigger(Floating);
             }
             if (_characterController.isGrounded && _isFloating)
             {
                 _isFloating = false;
-                if(_isMoving) _animator.SetBool(Running, true);
+                if (_isMoving)
+                {
+                    if(!m_SwordController.SwordOut) _animator.SetBool(Running, true);
+                    else _animator.SetBool(RunningSword, true);
+
+                }
                 _animator.SetTrigger(Land);
             }
         }
         private void Jump()
         {
             UnRestrictMovement();
-            _animator.SetBool(Running, false);
+            if(!m_SwordController.SwordOut) _animator.SetBool(Running, false);
+            else _animator.SetBool(RunningSword, false);
             _animator.SetTrigger(Jump1);
             _isFloating = true;
             _velocity.y = Mathf.Sqrt(m_JumpHeight * -2f * m_Gravity);
@@ -159,6 +177,12 @@ namespace ProjectA
         {
             Gizmos.color = Color.red;
             Gizmos.DrawRay(transform.position, _inputDirection.normalized);
+        }
+        private void OnGUI()
+        {
+            GUIStyle style = new GUIStyle();
+            style.fontSize = 50;
+            GUI.Label(new Rect(900, 300, 300, 300), "Restriction Status: " + _restrictMovement, style);
         }
     }
 }
