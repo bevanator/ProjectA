@@ -89,6 +89,7 @@ namespace ProjectA
         
         private void Slash()
         {
+            _isMoving = false;
             if(!m_SwordController.SwordOut) _animator.SetBool(Running, false);
             else _animator.SetBool(RunningSword, false);
             _animator.SetTrigger(Slash1);
