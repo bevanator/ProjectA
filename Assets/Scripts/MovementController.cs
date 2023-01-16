@@ -16,6 +16,7 @@ namespace ProjectA
         private Camera _camera;
 
         private Vector3 _velocity;
+        private bool _restrictMovement;
         
         [ShowInInspector, ReadOnly] private bool _isGrounded;
         [SerializeField] private float m_GroundCheckDistance;
@@ -34,6 +35,7 @@ namespace ProjectA
         private static readonly int Floating = Animator.StringToHash("Float");
         private static readonly int Slash1 = Animator.StringToHash("Slash1");
 
+        
 
         protected void Awake()
         {
@@ -48,6 +50,7 @@ namespace ProjectA
             ProcessInputDirection();
             Move();
             CheckGravityAndGround();
+            HandleAnimations();
             if (_characterController.isGrounded)
             {
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -58,6 +61,7 @@ namespace ProjectA
                 if (Input.GetMouseButtonDown(0))
                 {
                     Slash();
+                    RestrictMovement();
                 }
             }
             // else
@@ -70,6 +74,16 @@ namespace ProjectA
             // }
 
         }
+
+        private void RestrictMovement()
+        {
+            _restrictMovement = true;
+        }
+        private void UnRestrictMovement()
+        {
+            _restrictMovement = false;
+        }
+        
         private void Slash()
         {
             _animator.SetTrigger(Slash1);
@@ -82,6 +96,7 @@ namespace ProjectA
         }
         private void Move()
         {
+            if(_restrictMovement) return;
             if (_playerInputController.Direction.magnitude > 0.1f)
             {
                 if (!_isMoving)
@@ -115,6 +130,9 @@ namespace ProjectA
             }
             _velocity.y += m_Gravity * Time.deltaTime;
             _characterController.Move(Time.deltaTime * _velocity);
+        }
+        private void HandleAnimations()
+        {
             if (!_characterController.isGrounded && !_isFloating)
             {
                 _isFloating = true;
@@ -130,6 +148,7 @@ namespace ProjectA
         }
         private void Jump()
         {
+            UnRestrictMovement();
             _animator.SetBool(Running, false);
             _animator.SetTrigger(Jump1);
             _isFloating = true;
