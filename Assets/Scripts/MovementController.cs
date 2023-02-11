@@ -53,7 +53,7 @@ namespace ProjectA
             ProcessInputDirection();
             Move();
             CheckGravityAndGround();
-            HandleAnimations();
+            HandleJumpAnimations();
             if (_characterController.isGrounded)
             {
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -86,14 +86,7 @@ namespace ProjectA
         {
             _restrictMovement = false;
         }
-        
-        private void Slash()
-        {
-            _isMoving = false;
-            if(!m_SwordController.SwordOut) _animator.SetBool(Running, false);
-            else _animator.SetBool(RunningSword, false);
-            _animator.SetTrigger(Slash1);
-        }
+
         private void ProcessInputDirection()
         {
             _relativeAngle = Mathf.Atan2(_playerInputController.Direction.x,
@@ -108,11 +101,7 @@ namespace ProjectA
                 if (!_isMoving)
                 {
                     _isMoving = true;
-                    if (_characterController.isGrounded)
-                    {
-                        if(!m_SwordController.SwordOut) _animator.SetBool(Running, true);
-                        else _animator.SetBool(RunningSword, true);
-                    }
+                    if (_isGrounded) StartRunAnim();
                 }
             }
             
@@ -121,9 +110,7 @@ namespace ProjectA
                 if (_isMoving)
                 {
                     _isMoving = false;
-                    if(!m_SwordController.SwordOut) _animator.SetBool(Running, false);
-                    else _animator.SetBool(RunningSword, false);
-
+                    StopRunAnim();
                 }
                 return;
             }
@@ -144,35 +131,44 @@ namespace ProjectA
             _velocity.y += m_Gravity * Time.deltaTime;
             _characterController.Move(Time.deltaTime * _velocity);
         }
-        private void HandleAnimations()
+        private void HandleJumpAnimations()
         {
             if (!_characterController.isGrounded && !_isFloating)
             {
                 _isFloating = true;
-                if(!m_SwordController.SwordOut) _animator.SetBool(Running, false);
-                else _animator.SetBool(RunningSword, false);
+                StopRunAnim();
                 _animator.SetTrigger(Floating);
             }
             if (_characterController.isGrounded && _isFloating)
             {
                 _isFloating = false;
-                if (_isMoving)
-                {
-                    if(!m_SwordController.SwordOut) _animator.SetBool(Running, true);
-                    else _animator.SetBool(RunningSword, true);
-
-                }
+                if (_isMoving) StartRunAnim();
                 _animator.SetTrigger(Land);
             }
         }
         private void Jump()
         {
             UnRestrictMovement();
-            if(!m_SwordController.SwordOut) _animator.SetBool(Running, false);
-            else _animator.SetBool(RunningSword, false);
+            StopRunAnim();
             _animator.SetTrigger(Jump1);
             _isFloating = true;
             _velocity.y = Mathf.Sqrt(m_JumpHeight * -2f * m_Gravity);
+        }
+        private void Slash()
+        {
+            _isMoving = false;
+            StopRunAnim();
+            _animator.SetTrigger(Slash1);
+        }
+        private void StartRunAnim()
+        {
+            if (!m_SwordController.SwordOut) _animator.SetBool(Running, true);
+            else _animator.SetBool(RunningSword, true);
+        }
+        private void StopRunAnim()
+        {
+            if (!m_SwordController.SwordOut) _animator.SetBool(Running, false);
+            else _animator.SetBool(RunningSword, false);
         }
 
         private void OnDrawGizmos()
