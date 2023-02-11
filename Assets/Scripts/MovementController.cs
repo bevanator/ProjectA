@@ -1,4 +1,5 @@
 ﻿using System;
+using ProjectA.Hash;
 using Sirenix.OdinInspector;
 using UnityEngine;
 namespace ProjectA
@@ -12,9 +13,6 @@ namespace ProjectA
         private PlayerInputController _playerInputController;
         private CharacterController _characterController;
         private float _verticalVelocity;
-        private float _relativeAngle;
-        private Vector3 _inputDirection;
-        private Camera _camera;
 
         private Vector3 _velocity;
         private bool _restrictMovement;
@@ -30,30 +28,24 @@ namespace ProjectA
         [ShowInInspector, ReadOnly]
         private bool _isRunningOnGround;
         [ShowInInspector, ReadOnly] private bool _isFloating;
-        private static readonly int Running = Animator.StringToHash("Running");
-        private static readonly int Jump1 = Animator.StringToHash("Jump");
-        private static readonly int Land = Animator.StringToHash("Land");
-        private static readonly int Floating = Animator.StringToHash("Float");
-        private static readonly int Slash1 = Animator.StringToHash("Slash1");
-        private static readonly int RunningSword = Animator.StringToHash("RunningSword");
-
         [SerializeField] private SwordController m_SwordController;
+        [SerializeField] private PlayerAnimController m_PlayerAnimController;
+        
 
 
         protected void Awake()
         {
-            _camera = Camera.main;
             _animator = GetComponentInChildren<Animator>();
             _playerInputController = GetComponent<PlayerInputController>();
             _characterController = GetComponent<CharacterController>();
+            m_PlayerAnimController = GetComponent<PlayerAnimController>();
         }
 
         private void Update()
         {
-            ProcessInputDirection();
             Move();
             CheckGravityAndGround();
-            HandleAnimations();
+            HandleFloatAnimations();
             if (_characterController.isGrounded)
             {
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -86,13 +78,7 @@ namespace ProjectA
         {
             _restrictMovement = false;
         }
-
-        private void ProcessInputDirection()
-        {
-            _relativeAngle = Mathf.Atan2(_playerInputController.Direction.x,
-                _playerInputController.Direction.y) * Mathf.Rad2Deg + _camera.transform.eulerAngles.y;
-            _inputDirection = Quaternion.Euler(0f, _relativeAngle, 0f) * Vector3.forward;
-        }
+        
         private void Move()
         {
             if(_restrictMovement) return;
@@ -101,24 +87,23 @@ namespace ProjectA
                 if (!_isMoving)
                 {
                     _isMoving = true;
-                    if (_isGrounded) StartRunAnim();
+                    if (_isGrounded) m_PlayerAnimController.StartRunAnim();
                 }
             }
-            
             if (!(_playerInputController.Direction.magnitude > 0.1f))
             {
                 if (_isMoving)
                 {
                     _isMoving = false;
-                    StopRunAnim();
+                    m_PlayerAnimController.StopRunAnim();
                 }
                 return;
             }
             if (_isMoving)
             {
                 _speed = m_MaxMovementSpeed * Time.deltaTime;
-                transform.rotation = Quaternion.Euler(0f, _relativeAngle, 0f);
-                _characterController.Move(_speed * _inputDirection.normalized);
+                transform.rotation = Quaternion.Euler(0f, _playerInputController.RelativeAngle, 0f);
+                _characterController.Move(_speed * _playerInputController.InputDirection.normalized);
             }
         }
         private void CheckGravityAndGround()
@@ -131,55 +116,41 @@ namespace ProjectA
             _velocity.y += m_Gravity * Time.deltaTime;
             _characterController.Move(Time.deltaTime * _velocity);
         }
-        private void HandleAnimations()
+        private void HandleFloatAnimations()
         {
             if (!_characterController.isGrounded && !_isFloating)
             {
                 _isFloating = true;
-                StopRunAnim();
-                _animator.SetTrigger(Floating);
+                m_PlayerAnimController.StopRunAnim();
+                m_PlayerAnimController.FloatAnim();
             }
             if (_characterController.isGrounded && _isFloating)
             {
                 _isFloating = false;
-                _animator.SetTrigger(Land);
+                _animator.SetTrigger(AnimHash.Land);
                 if (_isMoving)
                 {
-                    _animator.ResetTrigger(Land);
-                    StartRunAnim();
+                    m_PlayerAnimController.LandAnim();
+                    m_PlayerAnimController.StartRunAnim();
                 }
             }
         }
+        
         private void Jump()
         {
             UnRestrictMovement();
-            StopRunAnim();
-            _animator.SetTrigger(Jump1);
+            m_PlayerAnimController.StopRunAnim();
+            m_PlayerAnimController.JumpAnim();
             _isFloating = true;
             _velocity.y = Mathf.Sqrt(m_JumpHeight * -2f * m_Gravity);
         }
         private void Slash()
         {
             _isMoving = false;
-            StopRunAnim();
-            _animator.SetTrigger(Slash1);
-        }
-        private void StartRunAnim()
-        {
-            if (!m_SwordController.SwordOut) _animator.SetBool(Running, true);
-            else _animator.SetBool(RunningSword, true);
-        }
-        private void StopRunAnim()
-        {
-            if (!m_SwordController.SwordOut) _animator.SetBool(Running, false);
-            else _animator.SetBool(RunningSword, false);
+            m_PlayerAnimController.StopRunAnim();
+            m_PlayerAnimController.Slash1Anim();
         }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawRay(transform.position, _inputDirection.normalized);
-        }
         private void OnGUI()
         {
             GUIStyle style = new GUIStyle();

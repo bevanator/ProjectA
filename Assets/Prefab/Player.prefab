@@ -2686,6 +2686,7 @@ GameObject:
   - component: {fileID: 2112094765972598779}
   - component: {fileID: 2112094765972598776}
   - component: {fileID: 158612529639745644}
+  - component: {fileID: 2239969307109599782}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -2815,6 +2816,8 @@ MonoBehaviour:
   m_Gravity: -35
   m_JumpHeight: 3
   m_CanDoubleJump: 0
+  m_SwordController: {fileID: 158612529639745644}
+  m_PlayerAnimController: {fileID: 0}
 --- !u!114 &158612529639745644
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2830,6 +2833,19 @@ MonoBehaviour:
   m_Spine: {fileID: 1235977562}
   m_Wrist: {fileID: 679745664}
   m_Katana: {fileID: 5626893790934185518}
+--- !u!114 &2239969307109599782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4675957454395125562}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18867fde49114a668c1039808bc22f6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SwordController: {fileID: 158612529639745644}
 --- !u!1 &4974434176327426054
 GameObject:
   m_ObjectHideFlags: 0
