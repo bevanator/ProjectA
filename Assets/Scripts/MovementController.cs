@@ -115,6 +115,7 @@ namespace ProjectA
                     }
                 }
             }
+            
             if (!(_playerInputController.Direction.magnitude > 0.1f))
             {
                 if (_isMoving)
@@ -182,8 +183,11 @@ namespace ProjectA
         private void OnGUI()
         {
             GUIStyle style = new GUIStyle();
-            style.fontSize = 50;
-            GUI.Label(new Rect(900, 300, 300, 300), "Restriction Status: " + _restrictMovement, style);
+            style.fontSize = 30;
+            GUI.Label(new Rect(1200, 100, 300, 300), "Restriction Status: " + _restrictMovement, style);
+            GUI.Label(new Rect(1200, 150, 300, 300), "Ground Check: " + _isGrounded, style);
+            GUI.Label(new Rect(1200, 200, 300, 300), "Sword Status: " + m_SwordController.SwordOut, style);
+            GUI.Label(new Rect(1200, 250, 300, 300), "Movement Status : " + _isMoving, style);
         }
     }
 }
