@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace ProjectA
 {
-    public class PlayerInputController : MonoBehaviour
+    public class PlayerInputHandler : MonoBehaviour
     {
         public float RelativeAngle { get; private set; }
         public Vector3 InputDirection { get; private set; }
