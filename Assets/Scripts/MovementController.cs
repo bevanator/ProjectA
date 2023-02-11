@@ -53,7 +53,7 @@ namespace ProjectA
             ProcessInputDirection();
             Move();
             CheckGravityAndGround();
-            HandleJumpAnimations();
+            HandleAnimations();
             if (_characterController.isGrounded)
             {
                 if (Input.GetKeyDown(KeyCode.Space))
@@ -131,7 +131,7 @@ namespace ProjectA
             _velocity.y += m_Gravity * Time.deltaTime;
             _characterController.Move(Time.deltaTime * _velocity);
         }
-        private void HandleJumpAnimations()
+        private void HandleAnimations()
         {
             if (!_characterController.isGrounded && !_isFloating)
             {
@@ -142,8 +142,12 @@ namespace ProjectA
             if (_characterController.isGrounded && _isFloating)
             {
                 _isFloating = false;
-                if (_isMoving) StartRunAnim();
                 _animator.SetTrigger(Land);
+                if (_isMoving)
+                {
+                    _animator.ResetTrigger(Land);
+                    StartRunAnim();
+                }
             }
         }
         private void Jump()
